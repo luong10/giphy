@@ -18,12 +18,12 @@
   flex-direction: column;
 }
 
-.loves:focus{
+/* .loves:focus{
   background-color: rgb(240, 103, 103);
   color: white;
   border: none;
 
-}
+} */
 
 .loves{
   position:fixed;

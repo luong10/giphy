@@ -16,19 +16,24 @@ export const Searchh = (props) => {
   const [keyWord, setKeyW] = useState("");
   const [offset, setOffset] = useState(0);
 
-  const [count, setCount] = useState();
+  const [localData, setLocalData] = useState();
 
   useEffect(() => {
-    setCount(Object.keys(localStorage));
+    setLocalData(Object.keys(localStorage));
     senCount();
-  }, [count]);
+  }, [localData]);
+
+  // localData.map((pre, index) => {
+  //   const t = JSON.parse(localStorage.getItem(pre));
+  //   console.log("checkkkkkkk", pre, t.favourites);
+  // });
 
   const senCount = () => {
     props.countGif(Object.keys(localStorage).length);
   };
 
   async function fetchData(keyWord, offset) {
-    setCount(Object.keys(localStorage).length);
+    // setCount(Object.keys(localStorage).length);
     // You can await here
     const mang = [];
     try {
@@ -73,20 +78,7 @@ export const Searchh = (props) => {
     }
   };
 
-  const success = () => {
-    message.success({
-      content: "Đã thích",
-      style: {
-        marginTop: "10vh",
-      },
-      icon: <HeartOutlined />,
-    });
-  };
-
-  // useEffect(() => {
-  //   likeIMG()
-  // }, [like]);
-
+  // console.log("check local", localData);
   return (
     <div>
       <Search
@@ -106,13 +98,70 @@ export const Searchh = (props) => {
                   src={post.url}
                   placeholder={true}
                 />
+                {/* {localData.length !== 0 ? (
+                  localData.map((pre, index) => {
+                    // const t = JSON.parse(localStorage.getItem(pre));
+                    // console.log("check pre", pre);
+                    if (pre === post.id) {
+                      return (
+                        <Button
+                          // ghost={true}
+                          onClick={() => {
+                            localStorage.removeItem(pre);
+                          }}
+                          className="loves love"
+                          shape="circle"
+                          icon={<HeartOutlined />}
+                        ></Button>
+                      );
+                    } else {
+                      return (
+                        <Button
+                          ghost={true}
+                          onClick={() => {
+                            if (pre === post.id) localStorage.removeItem(pre);
+                            else localStorage.setItem([post.id], post.url);
+                          }}
+                          className="loves"
+                          shape="circle"
+                          icon={<SearchOutlined />}
+                        ></Button>
+                      );
+                    }
+                  })
+                ) : (
+                  <Button
+                    ghost={true}
+                    onClick={() => {
+                      localStorage.setItem([post.id], post.url);
+                    }}
+                    className="loves"
+                    shape="circle"
+                    icon={<MailOutlined />}
+                  ></Button>
+                )} */}
+
                 <Button
-                  ghost={true}
+                  // ghost={true}
+
                   onClick={() => {
-                    success();
                     localStorage.setItem([post.id], post.url);
+                    localData &&
+                      localData.map((pre, inddex) => {
+                        if (pre === post.id) {
+                          localStorage.removeItem(post.id);
+                          // console.log("xoa o day");
+                        }
+                      });
                   }}
-                  className="loves"
+                  className={
+                    localData.length !== 0
+                      ? localData.map((pre, index) => {
+                          if (pre === post.id) return "loves love";
+                          else return "loves";
+                        })
+                      : "loves"
+                  }
                   shape="circle"
                   icon={<HeartOutlined />}
                 ></Button>
