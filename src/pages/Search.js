@@ -12,8 +12,10 @@ const style = {
 };
 
 export const Searchh = (props) => {
-  const [dataGif, setGif] = useState([]);
-  const [keyWord, setKeyW] = useState("");
+  const [dataGif, setGif] = useState(
+    JSON.parse(sessionStorage.getItem("search")) || []
+  );
+  const [keyWord, setKeyW] = useState(sessionStorage.getItem("word") || "");
   const [offset, setOffset] = useState(0);
 
   const [localData, setLocalData] = useState();
@@ -51,7 +53,7 @@ export const Searchh = (props) => {
       console.log(error);
     } finally {
       setGif([...dataGif, ...mang]);
-
+      sessionStorage.setItem("search", JSON.stringify([...dataGif, ...mang]));
       // console.log("check:", gif);
     }
   }
@@ -59,6 +61,7 @@ export const Searchh = (props) => {
   const onSearch = (value) => {
     try {
       fetchData(value, 0);
+      sessionStorage.setItem("word", value);
     } catch (error) {
       console.log(error);
     } finally {
@@ -84,7 +87,12 @@ export const Searchh = (props) => {
       <Search
         placeholder="input search text"
         onSearch={onSearch}
-        onChange={() => setGif([])}
+        value={keyWord}
+        onChange={(e) => {
+          setGif([]);
+          setKeyW(e.value);
+          sessionStorage.removeItem("search");
+        }}
         enterButton
       />
       <Row>
@@ -155,7 +163,7 @@ export const Searchh = (props) => {
                       });
                   }}
                   className={
-                    localData.length !== 0
+                    localData && localData.length !== 0
                       ? localData.map((pre, index) => {
                           if (pre === post.id) return "loves love";
                           else return "loves";
